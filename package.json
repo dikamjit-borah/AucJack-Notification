@@ -15,5 +15,15 @@
   "bugs": {
     "url": "https://github.com/dikamjit-borah/AucJack-Notification/issues"
   },
-  "homepage": "https://github.com/dikamjit-borah/AucJack-Notification#readme"
+  "homepage": "https://github.com/dikamjit-borah/AucJack-Notification#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "http-status": "^1.5.2",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.19"
+  }
 }
