@@ -1,6 +1,7 @@
 
 const TAG = "rmq.consumer.js"
 
+const rmqEvents = require('../events/event.handler')
 const basicUtils = require('../../utils/basic.utils');
 const constants = require('../../utils/constants');
 
@@ -8,23 +9,21 @@ const constants = require('../../utils/constants');
 async function receiveFromRabbitMq(queueName, pattern) {
 
     try {
-        if (!global.rmqChannel) {
-            console.log("whaa");
-            throw Error("rmq channel not available")
-        }
         let rmqQueue = `${constants.rmq.queuePrefix}_${queueName}`
-        const channel = global.rmqChannel;
+        if (!global.rmqChannel) {
+            throw Error("RabbitMQ channel does not exist")
+        }
 
+        const channel = global.rmqChannel;
         await channel.assertQueue(rmqQueue, {
             durable: true,
             persistent: true
         });
         channel.consume(rmqQueue, rmqData => {
             basicUtils.logger(TAG, `Consuming from ${rmqQueue}`)
-            console.log(`Received data: ${JSON.stringify(JSON.parse(rmqData.content.toString()))}`);
+            if(rmqData) rmqEvents.emit(constants.events.RMQ_CONSUMED, rmqData)
             //channel.ack(message);
         });
-        console.log(`Waiting for messages...`);
     } catch (err) {
         console.error(err);
     }

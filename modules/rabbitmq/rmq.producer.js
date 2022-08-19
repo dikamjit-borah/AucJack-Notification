@@ -10,7 +10,8 @@ async function sendToRabbitMq(queueName, pattern, data){
         throw Error("RabbitMQ channel does not exist")
     }
 
-    await global.rmqChannel.assertQueue( rmqQueue , {
+    const channel = global.rmqChannel;
+    await channel.assertQueue( rmqQueue , {
         durable: true,
         persistent: true
     });
