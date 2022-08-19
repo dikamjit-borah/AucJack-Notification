@@ -1,55 +1,34 @@
-const amqp = require('amqplib/callback_api')
-const config = require('../config.json')
+const TAG = "rmq.producer.js"
 
+const constants = require('../../utils/constants');
+const basicUtils = require('../../utils/basic.utils')
 
+async function sendToRabbitMq(queueName, pattern, data){
 
-async function sendTormq(queueName, pattern, data){
-
-    rmqQueue = `${config.rmqConfig.queuePrefix}_${queueName}`
+    let rmqQueue = `${constants.rmq.queuePrefix}_${queueName}`
     if (!global.rmqChannel) {
-        throw Error("rmq channel not available")
+        throw Error("RabbitMQ channel does not exist")
     }
 
-    global.rmqChannel.assertQueue( rmqQueue , {
+    await global.rmqChannel.assertQueue( rmqQueue , {
         durable: true,
         persistent: true
     });
 
-    const rmqPayload = new Buffer(
+    const rmqPayload =  Buffer.from(
         JSON.stringify({
             pattern,
             data
         }))
-
-    console.log("Sending payload to queue "+ rmqQueue);
-    await global.rmqChannel.sendToQueue(rmqQueue, rmqPayload, [{ persistent: true }]);
-    console.log("Payload sent");
     
+    basicUtils.logger(TAG, `Sending payload to ${rmqQueue}`)
+    try{
+        await global.rmqChannel.sendToQueue(rmqQueue, rmqPayload, [{ persistent: true }]);
+    }catch(err){
+        console.log(err)
+        throw Error(err)
+    }
     return;
         
 }
-module.exports = {sendTormq}
-
-
-
-/* 
-    amqp.connect('amqp://localhost', (err, connection) =>{
-        if(err){
-            console.log(err);
-            throw err
-        }
-    
-        connection.createChannel((err, channel) =>{
-            if(err){
-                console.log(err);
-                throw err
-            }
-    
-            const queue = 'MEDICINE_DATA'
-            channel.assertQueue(queue)
-            channel.sendToQueue(queue, Buffer.from("hehehehehehe"))
-            console.log("ola");
-        })
-           
-    
-    }) */
+module.exports = {sendToRabbitMq}
