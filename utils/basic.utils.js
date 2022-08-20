@@ -39,13 +39,14 @@ module.exports = {
         return res.status(statusCode).send(response)
     },
     parse_rmqData: function (rmqData) {
+        console.log("ful");
         let content
         let pattern
         let data
         try {
-            content = JSON.parse(rmqData.content.toString())
-            pattern = content.pattern
-            data = content.data
+            content = rmqData && rmqData.content ? JSON.parse(rmqData.content.toString()) : ""
+            pattern = content && content.pattern ? content.pattern : ""
+            data = content && content.data ? content.data : ""
         }
         catch (err) {
             console.log(err)
