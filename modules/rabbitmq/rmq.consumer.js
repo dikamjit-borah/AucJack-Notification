@@ -1,9 +1,9 @@
 
 const TAG = "rmq.consumer.js"
 
-const rmqEventHandler = require('../events/event.handler')
-const basicUtils = require('../../utils/basic.utils');
-const constants = require('../../utils/constants');
+const basicUtils = require('../../utils/basic.utils')
+const constants = require('../../utils/constants')
+const rmqEmitter = require('../rabbitmq/rmq.emitter')
 
 
 async function receiveFromRabbitMq(queueName, pattern) {
@@ -21,7 +21,8 @@ async function receiveFromRabbitMq(queueName, pattern) {
         });
         channel.consume(rmqQueue, rmqData => {
             basicUtils.logger(TAG, `Consuming from ${rmqQueue}`)
-            if(rmqData) rmqEventHandler.emit(constants.events.RMQ_CONSUMED, rmqData, rmqEventHandler)
+            //if(rmqData) rmqEventHandler.emit(constants.events.RMQ_CONSUMED, rmqData, rmqEventHandler)
+            if(rmqData) rmqEmitter.emit(constants.events.RMQ_CONSUMED, rmqData)
             //channel.ack(message);
         });
     } catch (err) {
