@@ -1,8 +1,7 @@
 const eventEmitter = new (require('events').EventEmitter)();
 
-function emitEvent(str) {
-    'use strict';
-    eventEmitter.emit(str);
+function emitEvent(...args) {
+    eventEmitter.emit(...args);
 }
 
 function registerEvent(str, callback) {
