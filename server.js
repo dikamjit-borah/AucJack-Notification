@@ -4,7 +4,6 @@ const TAG = "server.js"
 
 const express = require('express')
 const cors = require('cors');
-const mail = require('./modules/nodemailer/mailer');
 const { setupRabbitMq } = require('./modules/rabbitmq/rmq.connect');
 const { receiveFromRabbitMq } = require('./modules/rabbitmq/rmq.consumer');
 const rmqEmitter = require('./modules/rabbitmq/rmq.emitter')()
@@ -31,7 +30,6 @@ app.listen(port, () => {
     receiveFromRabbitMq(constants.rmq.queueNotification)
     
   });
-  //mail.sendMail()
 });
 
 

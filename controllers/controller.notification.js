@@ -1,4 +1,4 @@
-const mailer = require('../modules/nodemailer/mailer')
+const nmMailer = require('../modules/nodemailer/nm.mailer')
 module.exports = {
     auctionStarted: async function(data){
         const {itemId, scheduledAuctionStartDatetime, scheduledAuctionEndDatetime} = data
